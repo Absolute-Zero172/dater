@@ -5,16 +5,33 @@ from rich import print
 
 
 def get_modified_date(filepath: str) -> datetime.datetime:
+    """
+    gets the date modified of a filepath
+    :param filepath: relative or absolute filepath
+    :return: datetime object
+    """
     unix_timestamp = os.path.getmtime(filepath)
     modified_date = datetime.datetime.fromtimestamp(unix_timestamp)
     return modified_date
 
 
 def get_files(search_pattern="*.*", recursive=False) -> list[str]:
+    """
+    gets list of string paths for files with a given glob search pattern
+    :param search_pattern: the pattern to search
+    :param recursive: recursive in directories
+    :return: list of paths
+    """
     return glob.glob(search_pattern, recursive=recursive)
 
 
 def rename_file(old_name: str, new_name: str) -> None:
+    """
+    renames a file
+    :param old_name: old name/filepath
+    :param new_name: new name/filepath
+    :return: None
+    """
     try:
         # Rename the file
         os.rename(old_name, new_name)
@@ -28,6 +45,16 @@ def rename_file(old_name: str, new_name: str) -> None:
 
 def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_delimiter=True, titleize=True,
                ask=True) -> None:
+    """
+    renames files with the date, a delimiter, and its original title
+    :param files: list of file paths to rename
+    :param format_string: the format for the date (default: yyyy.mm.dd)
+    :param delimiter: how to separate the date and title (default: --)
+    :param pad_delimiter: pad delimiter with spaces on both sides
+    :param titleize: call .title() on the title (w/o file extension)
+    :param ask: confirm rename
+    :return: None
+    """
     name_changes = []
 
     if pad_delimiter:
