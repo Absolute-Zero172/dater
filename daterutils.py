@@ -1,6 +1,7 @@
 import os
 import datetime
 import glob
+from rich import print
 
 
 def get_modified_date(filepath: str) -> datetime.datetime:
@@ -25,7 +26,10 @@ def rename_file(old_name: str, new_name: str) -> None:
         print(f"An operating system error occurred: {e}")
 
 
-def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_delimiter=True, titleize=True) -> None:
+def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_delimiter=True, titleize=True,
+               ask=True) -> None:
+    name_changes = []
+
     if pad_delimiter:
         delimiter = f' {delimiter} '
 
@@ -48,6 +52,20 @@ def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_d
         path = "\\".join(old_name.split("\\")[:-1])
         new_name = path + ("\\" if path != '' else '') + modified_name
 
-        # rename files
+        # add name change
+        name_changes.append((old_name, new_name))
 
-        rename_file(old_name, new_name)
+    # print files
+    for index, (old_name, new_name) in enumerate(name_changes):
+        print(f'''{index}:\t[deep_pink4]"{old_name}"[/deep_pink4]\t->\t[green]"{new_name}"[/green]''')
+
+    # ask
+    confirmation = True
+    if ask:
+        print("\nConfirm? [[green]y[/green]/[red]n[/red]]: ", end="")
+        confirmation = input().lower() == 'y'
+
+    # rename files
+    if confirmation:
+        for old_name, new_name in name_changes:
+            rename_file(old_name, new_name)
