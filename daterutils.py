@@ -83,8 +83,14 @@ def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_d
         name_changes.append((old_name, new_name))
 
     # print files
+
+    # get maximum size
+    max_old = max([len(name[0]) for name in name_changes]) + 1
+    max_new = max([len(name[1]) for name in name_changes]) + 1
+
     for index, (old_name, new_name) in enumerate(name_changes):
-        print(f'''{index}:\t[deep_pink4]"{old_name}"[/deep_pink4]\t->\t[green]"{new_name}"[/green]''')
+        print(
+            f'''{index}: [deep_pink4]"{old_name + '"':<{max_old}}[/deep_pink4] -> [green]"{new_name + '"':<{max_new}}[/green]''')
 
     # ask
     confirmation = True
@@ -94,5 +100,8 @@ def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_d
 
     # rename files
     if confirmation:
+        print("[green]CONFIRMED[/green] -- Renaming files...")
         for old_name, new_name in name_changes:
             rename_file(old_name, new_name)
+    else:
+        print("[red]CANCELLED[/red] -- Nothing will be renamed")
