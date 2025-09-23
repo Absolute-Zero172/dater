@@ -90,7 +90,8 @@ def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_d
 
     for index, (old_name, new_name) in enumerate(name_changes):
         print(
-            f'''{index}: [deep_pink4]"{old_name + '"':<{max_old}}[/deep_pink4] -> [green]"{new_name + '"':<{max_new}}[/green]''')
+            f'''{index}: [deep_pink4]"{old_name + '"':<{max_old}}[/deep_pink4] -> [green]"{new_name + '"':<{max_new}}\
+            [/green]''')
 
     # ask
     confirmation = True
