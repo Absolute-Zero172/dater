@@ -18,7 +18,7 @@ parser = ap.ArgumentParser(
 """
 
 parser.add_argument('-p', '--pattern', type=str, default="*.*", help='search pattern (default: *.*)')
-parser.add_argument('--format', type=str, default="%Y.%m.%d", help='date format (default: %Y.%m.%d)')
+parser.add_argument('--format', type=str, default="%Y.%m.%d", help='date format (default: yyyy.mm.dd)')
 parser.add_argument('--delimiter', type=str, default="--", help='delimiter between date and filename (default: --)')
 parser.add_argument('--no-pad-delimiter', action='store_false',
                     help='remove spaces on ends of default delimiter (default=false)')
