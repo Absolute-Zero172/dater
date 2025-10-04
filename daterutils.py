@@ -43,6 +43,45 @@ def rename_file(old_name: str, new_name: str) -> None:
         print(f"An operating system error occurred: {e}")
 
 
+def get_dated_name(file_name: str, format_string="%Y.%m.%d", delimiter='--', pad_delimiter=True, titleize=True) -> str:
+    """
+    takes an input name and returns the formatted name with the date appended to the beginning
+    :param file_name: input file name (with optional path)
+    :param format_string: the format for the date (default: yyyy.mm.dd)
+    :param delimiter: how to separate the date and title (default: --)
+    :param pad_delimiter: pad delimiter with spaces on both sides
+    :param titleize: call .title() on the title (w/o file extension)
+    :return: the formatted date
+    """
+
+    # decide to pad delimiter
+    if pad_delimiter:
+        delimiter = f' {delimiter} '
+
+    # get path and name
+    path = '\\'.join(file_name.split('\\')[:-1])
+    path += '' if path == '' else '\\'
+    name = file_name.split('\\')[-1]
+    file_extension = '.' + name.split('.')[-1]
+    name = '.'.join(name.split('.')[:-1])
+
+    # titleize name
+    if titleize:
+        name = name.title()
+
+    # get dates
+    modified_date = get_modified_date(file_name)
+    formatted_date = modified_date.strftime(format_string)
+
+    # format name
+    formatted_name = formatted_date + delimiter + name
+
+    # add path and extension
+    completed_path = path + formatted_name + file_extension
+
+    return completed_path
+
+
 def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_delimiter=True, titleize=True,
                ask=True) -> None:
     """
@@ -57,27 +96,10 @@ def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_d
     """
     name_changes = []
 
-    if pad_delimiter:
-        delimiter = f' {delimiter} '
-
     for old_name in files:
-        # get date
-        modified_date = get_modified_date(old_name)
-        formatted_date = modified_date.strftime(format_string)
-
-        # get original name
-        original_name = old_name.split("\\")[-1]
-
-        # titleize
-        if titleize:
-            original_name = ('.'.join(original_name.split(".")[:-1])).title() + '.' + original_name.split(".")[-1]
-
-        # modify original name
-        modified_name = formatted_date + delimiter + original_name
-
-        # append path
-        path = "\\".join(old_name.split("\\")[:-1])
-        new_name = path + ("\\" if path != '' else '') + modified_name
+        # get new name
+        new_name = get_dated_name(old_name, format_string=format_string, delimiter=delimiter,
+                                  pad_delimiter=pad_delimiter, titleize=titleize)
 
         # add name change
         name_changes.append((old_name, new_name))
@@ -88,6 +110,7 @@ def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_d
     max_old = max([len(name[0]) for name in name_changes]) + 1
     max_new = max([len(name[1]) for name in name_changes]) + 1
 
+    # print names
     for index, (old_name, new_name) in enumerate(name_changes):
         print(
             f'''{index}: [deep_pink4]"{old_name + '"':<{max_old}}[/deep_pink4] -> [green]"{new_name + '"':<{max_new}}\
