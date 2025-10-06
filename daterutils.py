@@ -73,6 +73,7 @@ def get_dated_name(file_name: str, format_string="%Y.%m.%d", delimiter='--', pad
     # check for prenames
     if check_prenamed:
         # determine match with regex
+        # TODO: update regex pattern with date delimiters besides just "."
         match = re.fullmatch(r"[0-9]*\.[0-9]*\.[0-9]* *[-=:_]+ *.*$", name) is not None
 
         # if match, update name and flag
@@ -129,8 +130,8 @@ def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_d
     # print names
     for index, (old_name, new_name, prename_flag) in enumerate(name_changes):
         print(
-            f'''{index}: [deep_pink4]"{old_name + '"':<{max_old}}[/deep_pink4] ([light_blue]\
-{'-' if not prename_flag else '*'}[/light_blue]) -> [green]"{new_name + '"':<{max_new}}[/green]''')
+            f'''{index}: [deep_pink4]"{old_name + '"':<{max_old}}[/deep_pink4] \
+({'[grey42]-[/grey42]' if not prename_flag else '[gold3]*[/gold3]'}) -> [green]"{new_name + '"':<{max_new}}[/green]''')
 
     # ask
     confirmation = True
