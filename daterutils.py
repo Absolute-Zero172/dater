@@ -100,7 +100,7 @@ def get_dated_name(file_name: str, format_string="%Y.%m.%d", delimiter='--', pad
 
 
 def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_delimiter=True, titleize=True,
-               ask=True) -> None:
+               check_prenamed=True, ask=True) -> None:
     """
     renames files with the date, a delimiter, and its original title
     :param files: list of file paths to rename
@@ -108,6 +108,7 @@ def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_d
     :param delimiter: how to separate the date and title (default: --)
     :param pad_delimiter: pad delimiter with spaces on both sides
     :param titleize: call .title() on the title (w/o file extension)
+    :param check_prenamed: guess if the file has been named before; if so, remove and update the date
     :param ask: confirm rename
     :return: None
     """
@@ -116,7 +117,8 @@ def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_d
     for old_name in files:
         # get new name
         new_name, prename_flag = get_dated_name(old_name, format_string=format_string, delimiter=delimiter,
-                                                pad_delimiter=pad_delimiter, titleize=titleize)
+                                                pad_delimiter=pad_delimiter, titleize=titleize,
+                                                check_prenamed=check_prenamed)
 
         # add name change
         name_changes.append((old_name, new_name, prename_flag))

@@ -25,6 +25,8 @@ parser.add_argument('--delimiter', type=str, default="--", help='delimiter betwe
 parser.add_argument('--no-pad-delimiter', action='store_false',
                     help='remove spaces on ends of default delimiter (default=false)')
 parser.add_argument('-t', '--titleize', action='store_true', help='runs .title() on original titles')
+parser.add_argument('--no-check-prenamed', action='store_false', help='bypasses check to guess if files\
+ have already been renamed and does not pre-remove prefix')
 parser.add_argument('-y', '--force', action='store_false', help='bypasses confirmation step; NOT RECOMMENDED')
 
 # main
@@ -40,5 +42,6 @@ if __name__ == '__main__':
         delimiter=args.delimiter,
         pad_delimiter=args.no_pad_delimiter,
         titleize=args.titleize,
-        ask=args.force
+        ask=args.force,
+        check_prenamed=args.no_check_prenamed
     )
