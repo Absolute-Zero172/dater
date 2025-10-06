@@ -2,6 +2,7 @@ import os
 import datetime
 import glob
 from rich import print
+import re
 
 
 def get_modified_date(filepath: str) -> datetime.datetime:
@@ -43,7 +44,8 @@ def rename_file(old_name: str, new_name: str) -> None:
         print(f"An operating system error occurred: {e}")
 
 
-def get_dated_name(file_name: str, format_string="%Y.%m.%d", delimiter='--', pad_delimiter=True, titleize=True) -> str:
+def get_dated_name(file_name: str, format_string="%Y.%m.%d", delimiter='--', pad_delimiter=True, titleize=True,
+                   check_prenamed=True) -> tuple[str, bool]:
     """
     takes an input name and returns the formatted name with the date appended to the beginning
     :param file_name: input file name (with optional path)
@@ -51,8 +53,11 @@ def get_dated_name(file_name: str, format_string="%Y.%m.%d", delimiter='--', pad
     :param delimiter: how to separate the date and title (default: --)
     :param pad_delimiter: pad delimiter with spaces on both sides
     :param titleize: call .title() on the title (w/o file extension)
-    :return: the formatted date
+    :param check_prenamed: guess if the file has been named before; if so, remove and update the date
+    :return: tuple, first item is the modified name and second is a boolean flag whether the date was a prename update
     """
+
+    name_update_flag = False
 
     # decide to pad delimiter
     if pad_delimiter:
@@ -64,6 +69,17 @@ def get_dated_name(file_name: str, format_string="%Y.%m.%d", delimiter='--', pad
     name = file_name.split('\\')[-1]
     file_extension = '.' + name.split('.')[-1]
     name = '.'.join(name.split('.')[:-1])
+
+    # check for prenames
+    if check_prenamed:
+        # determine match with regex
+        match = re.fullmatch(r"[0-9]*\.[0-9]*\.[0-9]* *[-=:_]+ *.*$", name) is not None
+
+        # if match, update name and flag
+        if match:
+            guessed_name = re.split(r" *[-=:_]+ *", name)[-1]
+            name = guessed_name
+            name_update_flag = True
 
     # titleize name
     if titleize:
@@ -79,7 +95,7 @@ def get_dated_name(file_name: str, format_string="%Y.%m.%d", delimiter='--', pad
     # add path and extension
     completed_path = path + formatted_name + file_extension
 
-    return completed_path
+    return completed_path, name_update_flag
 
 
 def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_delimiter=True, titleize=True,
@@ -98,11 +114,11 @@ def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_d
 
     for old_name in files:
         # get new name
-        new_name = get_dated_name(old_name, format_string=format_string, delimiter=delimiter,
-                                  pad_delimiter=pad_delimiter, titleize=titleize)
+        new_name, prename_flag = get_dated_name(old_name, format_string=format_string, delimiter=delimiter,
+                                                pad_delimiter=pad_delimiter, titleize=titleize)
 
         # add name change
-        name_changes.append((old_name, new_name))
+        name_changes.append((old_name, new_name, prename_flag))
 
     # print files
 
@@ -111,10 +127,10 @@ def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_d
     max_new = max([len(name[1]) for name in name_changes]) + 1
 
     # print names
-    for index, (old_name, new_name) in enumerate(name_changes):
+    for index, (old_name, new_name, prename_flag) in enumerate(name_changes):
         print(
-            f'''{index}: [deep_pink4]"{old_name + '"':<{max_old}}[/deep_pink4] -> [green]"{new_name + '"':<{max_new}}\
-            [/green]''')
+            f'''{index}: [deep_pink4]"{old_name + '"':<{max_old}}[/deep_pink4] ([light_blue]\
+{'-' if not prename_flag else '*'}[/light_blue]) -> [green]"{new_name + '"':<{max_new}}[/green]''')
 
     # ask
     confirmation = True
@@ -125,7 +141,11 @@ def date_files(files: list[str], format_string="%Y.%m.%d", delimiter='--', pad_d
     # rename files
     if confirmation:
         print("[green]CONFIRMED[/green] -- Renaming files...")
-        for old_name, new_name in name_changes:
+        for old_name, new_name, _ in name_changes:
             rename_file(old_name, new_name)
     else:
         print("[red]CANCELLED[/red] -- Nothing will be renamed")
+
+
+if __name__ == '__main__':
+    date_files(get_files("test\\*.*"))
