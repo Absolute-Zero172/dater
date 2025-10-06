@@ -15,6 +15,7 @@ parser = ap.ArgumentParser(
 --delimiter 
 --no-pad-delimiter
 -t --titleize
+--no-check-prenamed
 -y --force
 """
 

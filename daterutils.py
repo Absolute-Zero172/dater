@@ -73,8 +73,7 @@ def get_dated_name(file_name: str, format_string="%Y.%m.%d", delimiter='--', pad
     # check for prenames
     if check_prenamed:
         # determine match with regex
-        # TODO: update regex pattern with date delimiters besides just "."
-        match = re.fullmatch(r"[0-9]*\.[0-9]*\.[0-9]* *[-=:_]+ *.*$", name) is not None
+        match = re.fullmatch(r"^[0-9]+[-.=_][0-9]+[-.=_][0-9]+ *[-=:_]+ *.*$", name) is not None
 
         # if match, update name and flag
         if match:
