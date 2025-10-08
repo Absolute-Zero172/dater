@@ -27,5 +27,10 @@ convenient sorting and file lookup.
   - `--delimiter "--"` - "--" default
 - `--no-pad-delimiter` - if used, this flag removes the additional spaces placed on either side of the delimiter
 - `t` or `--titlelize` - uses str.title() on the original file name
+- `--no-check-prenamed` - dater automatically checks whether a date prefix is already present; this flag skips that check and always appends the date prefix
+  - date prefix check hits when:
+    - three sets of numbers separated by delimiter (-.=_)
+    - delimiter (-.=_) between title and date (with or without spaces)
+  - see regex search in source code for complete guess parameters
 - `-y` or `--force` - skips file renaming confirmation step; this flag is generally not recommended
 
