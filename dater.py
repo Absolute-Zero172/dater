@@ -1,6 +1,16 @@
 import argparse as ap
 from daterutils import get_files, date_files
 
+# program name
+PROGRAM_NAME = "dater"
+
+# version _._._
+#         ^ ^ ^
+#         | | L Small change/bugfix
+#         | L _ Bigger change/feature
+#         L _ _ Large update/feature set
+VERSION = "1.1.1"
+
 # declare parser
 parser = ap.ArgumentParser(
     prog="dater",
@@ -17,6 +27,7 @@ parser = ap.ArgumentParser(
 -t --titleize
 --no-check-prenamed
 -y --force
+-v --version
 """
 
 # add arguments
@@ -30,10 +41,17 @@ parser.add_argument('--no-check-prenamed', action='store_false', help='bypasses 
  have already been renamed and does not pre-remove prefix')
 parser.add_argument('-y', '--force', action='store_false', help='bypasses confirmation step; NOT RECOMMENDED')
 
+parser.add_argument('-v', '--version', action='store_true', help="displays the release version")
+
 # main
 if __name__ == '__main__':
     # parse args
     args = parser.parse_args()
+
+    # if version
+    if args.version:
+        print(f"{PROGRAM_NAME} -- v{VERSION}")
+        exit(0)
 
     # rename files
     files = get_files(search_pattern=args.pattern)
