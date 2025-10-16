@@ -1,5 +1,6 @@
 import argparse as ap
 from daterutils import get_files, date_files
+from rich import print
 
 # program name
 PROGRAM_NAME = "dater"
@@ -48,19 +49,18 @@ if __name__ == '__main__':
     # parse args
     args = parser.parse_args()
 
-    # if version
-    if args.version:
-        print(f"{PROGRAM_NAME} -- v{VERSION}")
-        exit(0)
+    # always print version
+    print(f"\n[orange3]{PROGRAM_NAME}[/orange3] -- [dodger_blue2]v{VERSION}[/dodger_blue2]\n")
 
-    # rename files
-    files = get_files(search_pattern=args.pattern)
-    date_files(
-        files,
-        format_string=args.format,
-        delimiter=args.delimiter,
-        pad_delimiter=args.no_pad_delimiter,
-        titleize=args.titleize,
-        ask=args.force,
-        check_prenamed=args.no_check_prenamed
-    )
+    if not args.version:
+        # rename files
+        files = get_files(search_pattern=args.pattern)
+        date_files(
+            files,
+            format_string=args.format,
+            delimiter=args.delimiter,
+            pad_delimiter=args.no_pad_delimiter,
+            titleize=args.titleize,
+            ask=args.force,
+            check_prenamed=args.no_check_prenamed
+        )
