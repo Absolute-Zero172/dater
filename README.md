@@ -18,7 +18,7 @@ convenient sorting and file lookup.
 
 - `--help` - shows help text and exits
 - `-p` or `--pattern` - outlines the search pattern for which files to rename
-    - `-p *.*` - All files in current directory (defualt)
+    - `-p *.*` - All files in current directory (default)
     - `-p <directory>\*.*` - All files in a different relative directory
     - `-p *.py` - Only rename .py files in current directory
 - `--format` - custom date format
