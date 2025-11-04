@@ -10,7 +10,7 @@ PROGRAM_NAME = "dater"
 #         | | L Small change/bugfix
 #         | L _ Bigger change/feature
 #         L _ _ Large update/feature set
-VERSION = "1.1.1"
+VERSION = "1.1.2"
 
 # declare parser
 parser = ap.ArgumentParser(
